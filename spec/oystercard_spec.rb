@@ -46,4 +46,36 @@ describe Oystercard do
 
   end
 
+  describe "#in_journey" do
+    it "responds to false when the card is instantiated" do
+      expect(subject.in_journey).to eq false
+    end
+    it "responds to true when the user has touched in" do
+      subject.touch_in
+      expect(subject.in_journey).to eq true
+    end
+
+    it "responds to false when the user has touched in and out" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject.in_journey).to eq false
+    end
+
+
+  end
+
+  describe "#touch_in" do
+    it "responds to touch_in" do
+      expect(subject).to respond_to(:touch_in)
+    end
+  end
+
+  describe "#touch_out" do
+    it "responds to touch_out" do
+      expect(subject).to respond_to(:touch_out)
+    end
+  end
+
+
+
 end
