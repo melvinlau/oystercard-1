@@ -25,7 +25,7 @@ describe Oystercard do
     end
 
     it 'tells user balance limit exceeded' do
-      expect { subject.top_up(95) }.to raise_error("Balance limit exceeded. Please top up #{Oystercard::MAXIMUM_BALANCE - subject.balance} or less")
+      expect(subject.top_up(95)).to match("Balance limit exceeded. Please top up #{Oystercard::MAXIMUM_BALANCE - subject.balance} or less")
     end
 
   end
