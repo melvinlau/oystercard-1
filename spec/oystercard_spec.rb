@@ -2,6 +2,8 @@ require 'oystercard'
 
 describe Oystercard do
 
+  minimum_balance = described_class::MINIMUM_BALANCE
+
   it 'initialises a new card with balance: 0' do
     expect(subject.balance).to eq 0
   end
@@ -51,7 +53,7 @@ describe Oystercard do
       expect(subject.in_journey).to eq false
     end
     it "responds to true when the user has touched in" do
-      subject.top_up(Oystercard::MINIMUM_BALANCE)
+      subject.top_up(minimum_balance)
       subject.touch_in
       expect(subject.in_journey).to eq true
     end
@@ -80,6 +82,12 @@ describe Oystercard do
     it "responds to touch_out" do
       expect(subject).to respond_to(:touch_out)
     end
+    it "reduces the balance by the minimum fare amount" do
+      subject.top_up(10.0)
+      subject.touch_in
+      expect { subject.touch_out }.to change{subject.balance}.by(-minimum_balance)
+    end
+
   end
 
 
