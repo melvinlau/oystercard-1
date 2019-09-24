@@ -51,6 +51,7 @@ describe Oystercard do
       expect(subject.in_journey).to eq false
     end
     it "responds to true when the user has touched in" do
+      subject.top_up(Oystercard::MINIMUM_BALANCE)
       subject.touch_in
       expect(subject.in_journey).to eq true
     end
@@ -68,6 +69,11 @@ describe Oystercard do
     it "responds to touch_in" do
       expect(subject).to respond_to(:touch_in)
     end
+
+    it 'should return message when touching in with balance below 1' do
+      expect(subject.touch_in).to eq "Insufficient funds. Card balance: #{subject.balance}"
+    end
+
   end
 
   describe "#touch_out" do
