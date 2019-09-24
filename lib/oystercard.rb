@@ -18,25 +18,32 @@ class Oystercard
     end
   end
 
-  def deduct(fare)
-    "Card balance: #{@balance -= fare}"
-  end
-
   def touch_in
     return "Insufficient funds. Card balance: #{@balance}" if insufficient_funds?
     @in_journey = true
+    show_balance
   end
 
   def touch_out
     @in_journey = false
     deduct(MINIMUM_BALANCE)
+    show_balance
   end
 
   def insufficient_funds?
     @balance < MINIMUM_BALANCE
   end
 
+  def show_balance
+    "Card balance: #{@balance}"
+  end
 
   attr_reader :in_journey
+
+  private
+
+  def deduct(fare)
+    @balance -= fare
+  end
 
 end

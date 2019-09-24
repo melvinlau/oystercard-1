@@ -32,22 +32,6 @@ describe Oystercard do
 
   end
 
-  describe '#deduct' do
-
-    it 'expect oystercard to respond to top_up method' do
-      expect(subject).to respond_to(:deduct)
-    end
-
-    it 'expect fare to be deducted from oystercard balance' do
-      expect { subject.deduct(2) }.to change { subject.balance }.by(-2)
-    end
-
-    it 'returns card balance after deducting' do
-      expect(subject.deduct(2)).to match("Card balance: #{subject.balance}")
-    end
-
-  end
-
   describe "#in_journey" do
     it "responds to false when the card is instantiated" do
       expect(subject.in_journey).to eq false
