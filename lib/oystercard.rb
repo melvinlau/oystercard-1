@@ -7,7 +7,6 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @in_journey = false
   end
 
   def top_up(money)
@@ -16,6 +15,10 @@ class Oystercard
     else
       "Card balance: #{@balance += money}"
     end
+  end
+
+  def in_journey
+    !@entry_station.nil? ? true : false
   end
 
   def balance
@@ -30,6 +33,7 @@ class Oystercard
   end
 
   def touch_out
+    @entry_station = nil
     @in_journey = false
     deduct(MINIMUM_BALANCE)
     show_balance
@@ -42,8 +46,6 @@ class Oystercard
   def show_balance
     "Card balance: #{@balance}"
   end
-
-  attr_reader :in_journey
 
   private
 

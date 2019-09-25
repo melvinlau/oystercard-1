@@ -50,7 +50,6 @@ describe Oystercard do
       expect(card.in_journey).to eq false
     end
 
-
   end
 
   describe "#touch_in" do
@@ -69,17 +68,28 @@ describe Oystercard do
   end
 
   describe "#touch_out" do
-    it "responds to touch_out" do
-      expect(subject).to respond_to(:touch_out)
+
+    before(:each) do
+      card.top_up(10.0)
+      card.touch_in(aldgate)
     end
+
+    it "responds to touch_out" do
+      expect(card).to respond_to(:touch_out)
+    end
+
+
     it "reduces the balance by the minimum fare amount" do
-      subject.top_up(10.0)
-      subject.touch_in(aldgate)
-      old_balance = subject.balance
-      subject.touch_out
+      old_balance = card.balance
+      card.touch_out
       fare = minimum_balance
       new_balance = old_balance - fare
-      expect(subject.balance).to eq(new_balance)
+      expect(card.balance).to eq(new_balance)
+    end
+
+    it "overrides the contents of entry_location to nil" do
+      card.touch_out
+      expect(card.entry_station).to be_nil
     end
 
   end
