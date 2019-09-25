@@ -2,10 +2,12 @@ require 'oystercard'
 
 describe Oystercard do
   let(:card) { described_class.new }
-  let(:aldgate) { double("station") }
+  let(:entry_station) { double("station") }
+  let(:exit_station) { double("station") }
 
   minimum_balance = described_class::MINIMUM_BALANCE
-
+  fare = minimum_balance
+  
   it 'initialises a new card with balance: 0' do
     expect(card.balance).to eq 0
   end
@@ -40,13 +42,13 @@ describe Oystercard do
     end
     it "responds to true when the user has touched in" do
       card.top_up(minimum_balance)
-      card.touch_in(aldgate)
+      card.touch_in(entry_station)
       expect(card.in_journey).to eq true
     end
 
     it "responds to false when the user has touched in and out" do
-      card.touch_in(aldgate)
-      card.touch_out
+      card.touch_in(entry_station)
+      card.touch_out(exit_station)
       expect(card.in_journey).to eq false
     end
 
@@ -56,13 +58,13 @@ describe Oystercard do
 
 
     it 'should return message when touching in with balance below 1' do
-      expect(subject.touch_in(aldgate)).to eq "Insufficient funds. Card balance: #{subject.balance}"
+      expect(subject.touch_in(entry_station)).to eq "Insufficient funds. Card balance: #{subject.balance}"
     end
 
     it "should take a station in order to remember journey start point" do
       card.top_up(10)
-      card.touch_in(aldgate)
-      expect(card.entry_station).to eq aldgate
+      card.touch_in(entry_station)
+      expect(card.entry_station).to eq entry_station
     end
 
   end
@@ -71,29 +73,46 @@ describe Oystercard do
 
     before(:each) do
       card.top_up(10.0)
-      card.touch_in(aldgate)
+      card.touch_in(entry_station)
     end
-
-    it "responds to touch_out" do
-      expect(card).to respond_to(:touch_out)
-    end
-
 
     it "reduces the balance by the minimum fare amount" do
       old_balance = card.balance
-      card.touch_out
+      card.touch_out(exit_station)
       fare = minimum_balance
       new_balance = old_balance - fare
       expect(card.balance).to eq(new_balance)
     end
 
     it "overrides the contents of entry_location to nil" do
-      card.touch_out
+      card.touch_out(exit_station)
       expect(card.entry_station).to be_nil
     end
 
   end
 
+  describe "#history" do
+    it "displays an empty array when card first initialized" do
+      card.top_up(90)
+      expect(card.history).to eq []
+    end
 
+    it "display an array of historic journeys" do
+      card.top_up(90)
+      5.times do
+        card.touch_in(entry_station)
+        card.touch_out(exit_station)
+      end
+
+      card_history = [
+        {entry: entry_station, exit: exit_station, fare: fare},
+        {entry: entry_station, exit: exit_station, fare: fare},
+        {entry: entry_station, exit: exit_station, fare: fare},
+        {entry: entry_station, exit: exit_station, fare: fare},
+        {entry: entry_station, exit: exit_station, fare: fare}
+      ]
+      expect(card.history).to eq card_history
+    end
+  end
 
 end
