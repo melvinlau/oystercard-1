@@ -1,7 +1,6 @@
 
 class Oystercard
 
-  attr_reader :balance
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
 
@@ -16,6 +15,10 @@ class Oystercard
     else
       "Card balance: #{@balance += money}"
     end
+  end
+
+  def balance
+    @balance
   end
 
   def touch_in

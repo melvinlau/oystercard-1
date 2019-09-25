@@ -69,7 +69,11 @@ describe Oystercard do
     it "reduces the balance by the minimum fare amount" do
       subject.top_up(10.0)
       subject.touch_in
-      expect { subject.touch_out }.to change{subject.balance}.by(-minimum_balance)
+      old_balance = subject.balance
+      subject.touch_out
+      fare = minimum_balance
+      new_balance = old_balance - fare
+      expect(subject.balance).to eq(new_balance)
     end
 
   end
