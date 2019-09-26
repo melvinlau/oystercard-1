@@ -7,16 +7,12 @@ describe Oystercard do
 
   minimum_balance = described_class::MINIMUM_BALANCE
   fare = minimum_balance
-  
+
   it 'initialises a new card with balance: 0' do
     expect(card.balance).to eq 0
   end
 
   describe '#top_up' do
-
-    it 'expect oystercard to respond to top_up method' do
-      expect(card).to respond_to(:top_up)
-    end
 
     it 'expect oystercard to respond to top_up method' do
       expect(card).to respond_to(:top_up).with(1).argument
@@ -56,17 +52,32 @@ describe Oystercard do
 
   describe "#touch_in" do
 
+    context "with sufficient funds" do
 
-    it 'should return message when touching in with balance below 1' do
-      expect(subject.touch_in(entry_station)).to eq "Insufficient funds. Card balance: #{subject.balance}"
+      before(:each) do
+        card.top_up(10)
+        card.touch_in(entry_station)
+      end
+
+      it "should take a station in order to remember journey start point" do
+        expect(card.entry_station).to eq entry_station
+      end
+
+      # it "creates a new Journey instance and passes entry station as argument" do
+      #
+      # end
+
     end
 
-    it "should take a station in order to remember journey start point" do
-      card.top_up(10)
-      card.touch_in(entry_station)
-      expect(card.entry_station).to eq entry_station
-    end
+    context "with insufficient funds" do
+      it "returns a notification to user" do
+        message = "Insufficient funds. Card balance: #{subject.balance}"
+        expect(subject.touch_in(entry_station)).to eq message
+      end
 
+      # To check that journey does not start!
+
+    end
   end
 
   describe "#touch_out" do
@@ -91,28 +102,28 @@ describe Oystercard do
 
   end
 
-  describe "#history" do
-    it "displays an empty array when card first initialized" do
-      card.top_up(90)
-      expect(card.history).to eq []
-    end
-
-    it "display an array of historic journeys" do
-      card.top_up(90)
-      5.times do
-        card.touch_in(entry_station)
-        card.touch_out(exit_station)
-      end
-
-      card_history = [
-        {entry: entry_station, exit: exit_station, fare: fare},
-        {entry: entry_station, exit: exit_station, fare: fare},
-        {entry: entry_station, exit: exit_station, fare: fare},
-        {entry: entry_station, exit: exit_station, fare: fare},
-        {entry: entry_station, exit: exit_station, fare: fare}
-      ]
-      expect(card.history).to eq card_history
-    end
-  end
+  # describe "#history" do
+  #   it "displays an empty array when card first initialized" do
+  #     card.top_up(90)
+  #     expect(card.history).to eq []
+  #   end
+  #
+  #   it "display an array of historic journeys" do
+  #     card.top_up(90)
+  #     5.times do
+  #       card.touch_in(entry_station)
+  #       card.touch_out(exit_station)
+  #     end
+  #
+  #     card_history = [
+  #       {entry: entry_station, exit: exit_station, fare: fare},
+  #       {entry: entry_station, exit: exit_station, fare: fare},
+  #       {entry: entry_station, exit: exit_station, fare: fare},
+  #       {entry: entry_station, exit: exit_station, fare: fare},
+  #       {entry: entry_station, exit: exit_station, fare: fare}
+  #     ]
+  #     expect(card.history).to eq card_history
+  #   end
+  # end
 
 end

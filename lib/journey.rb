@@ -1,6 +1,5 @@
 class Journey
 
-  attr_reader :entry, :exit
   @@history = []
   DEFAULT_ACTION = "no info"
   MINIMUM_FARE = 1.00
@@ -10,17 +9,21 @@ class Journey
     @@history
   end
 
+  def start(entry_station)
+    @entry_station = entry_station
+  end
+
+  def end(exit_station)
+    @exit_station = exit_station
+  end
+
   def fare
-    return PENALTY_FARE if @exit == DEFAULT_ACTION
+    return PENALTY_FARE if @entry_station.nil?
+    return PENALTY_FARE if @exit_station.nil?
     MINIMUM_FARE
   end
 
-  def initialize(entry, exit=DEFAULT_ACTION)
-    @entry = entry
-    @exit = exit
-  end
-
   def update_history
-    @@history << { entry: @entry, exit: @exit }
+    @@history << { entry: @entry_station, exit: @exit_station }
   end
 end
