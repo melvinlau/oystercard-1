@@ -59,10 +59,11 @@ describe Journey do
   # I want to see to all my previous trips
   describe "#update_history" do
     it "logs the first completed journey into the journey history" do
+      described_class.history = [] # Is there a way to avoid doing this?
       journey.start(entry_station)
       journey.end(exit_station)
       expected_history = [ { entry: entry_station, exit: exit_station } ]
-      expect(journey.update_history).to eq expected_history
+      expect(described_class.history).to eq expected_history
     end
   end
 

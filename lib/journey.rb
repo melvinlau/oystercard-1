@@ -9,12 +9,26 @@ class Journey
     @@history
   end
 
+  def self.history=(history)
+    @@history = history
+  end
+
+  # Getter methods
+  def entry_station
+    @entry_station
+  end
+  def exit_station
+    @exit_station
+  end
+
+  # Setter methods
   def start(entry_station)
     @entry_station = entry_station
   end
-
   def end(exit_station)
     @exit_station = exit_station
+    update_history
+    @exit_station
   end
 
   def fare

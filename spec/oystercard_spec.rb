@@ -32,23 +32,23 @@ describe Oystercard do
 
   end
 
-  describe "#in_journey" do
-    it "responds to false when the card is instantiated" do
-      expect(card.in_journey).to eq false
-    end
-    it "responds to true when the user has touched in" do
-      card.top_up(minimum_balance)
-      card.touch_in(entry_station)
-      expect(card.in_journey).to eq true
-    end
-
-    it "responds to false when the user has touched in and out" do
-      card.touch_in(entry_station)
-      card.touch_out(exit_station)
-      expect(card.in_journey).to eq false
-    end
-
-  end
+  # describe "#in_journey" do
+  #   it "responds to false when the card is instantiated" do
+  #     expect(card.in_journey).to eq false
+  #   end
+  #   it "responds to true when the user has touched in" do
+  #     card.top_up(minimum_balance)
+  #     card.touch_in(entry_station)
+  #     expect(card.in_journey).to eq true
+  #   end
+  #
+  #   it "responds to false when the user has touched in and out" do
+  #     card.touch_in(entry_station)
+  #     card.touch_out(exit_station)
+  #     expect(card.in_journey).to eq false
+  #   end
+  #
+  # end
 
   describe "#touch_in" do
 
@@ -59,13 +59,10 @@ describe Oystercard do
         card.touch_in(entry_station)
       end
 
-      it "should take a station in order to remember journey start point" do
-        expect(card.entry_station).to eq entry_station
+      it "creates a Journey and logs the entry station" do
+        journey = Journey.new
+        expect(journey.entry_station).to eq entry_station
       end
-
-      # it "creates a new Journey instance and passes entry station as argument" do
-      #
-      # end
 
     end
 
@@ -95,10 +92,10 @@ describe Oystercard do
       expect(card.balance).to eq(new_balance)
     end
 
-    it "overrides the contents of entry_location to nil" do
-      card.touch_out(exit_station)
-      expect(card.entry_station).to be_nil
-    end
+    # it "overrides the contents of entry_location to nil" do
+    #   card.touch_out(exit_station)
+    #   expect(card.entry_station).to be_nil
+    # end
 
   end
 
