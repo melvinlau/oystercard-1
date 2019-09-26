@@ -2,7 +2,7 @@ require "station"
 
 describe Station do
 
-  # In order to know how far I have travelled
+  # C-13 - In order to know how far I have travelled
   # As a customer
   # I want to know what zone a station is in
 
@@ -10,7 +10,7 @@ describe Station do
 
   describe "#name" do
     it "returns the station name" do
-      expect(station.name).to eq "aldgate"
+      expect(station.name).to eq ("aldgate")
     end
   end
 
@@ -20,6 +20,9 @@ describe Station do
     end
   end
 
+  # In order to be charged correctly
+  # As a customer
+  # I need a penalty charge deducted if I fail to touch in or out
 
 
 end
