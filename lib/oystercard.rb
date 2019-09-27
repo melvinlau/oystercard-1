@@ -20,8 +20,16 @@ class Oystercard
 
   def touch_in(station)
     return "Insufficient funds. Card balance: #{@balance}" if insufficient_funds?
+    check_for_last_touch_out
     journey.start(station)
     show_balance
+  end
+
+  def check_for_last_touch_out
+    if journey.exit_station.nil?
+      deduct(journey.penalty_fare)
+      "Penalty fare deducted because you didn't touch out"
+    end
   end
 
   def touch_out(station)

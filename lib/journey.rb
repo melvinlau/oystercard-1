@@ -20,9 +20,13 @@ class Journey
   def exit_station
     @exit_station
   end
+  def penalty_fare
+      PENALTY_FARE
+  end
 
   # Setter methods
   def start(entry_station)
+    @exit_station = nil # reset the exit station to nil
     @entry_station = entry_station
   end
   def end(exit_station)

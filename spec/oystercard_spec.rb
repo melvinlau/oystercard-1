@@ -7,6 +7,7 @@ describe Oystercard do
 
   minimum_balance = described_class::MINIMUM_BALANCE
   fare = minimum_balance
+  let(:penalty_fare) { 6.00 }
 
   it 'initialises a new card with balance: 0' do
     expect(card.balance).to eq 0
@@ -45,6 +46,10 @@ describe Oystercard do
         expect(card.journey.entry_station).to eq entry_station
       end
 
+      it "deducts a penalty fare if user did not touch out in last journey" do
+        expect { card.touch_in(entry_station) }.to change { card.balance }.by(-penalty_fare)
+      end
+
     end
 
     context "with insufficient funds" do
@@ -55,11 +60,8 @@ describe Oystercard do
       end
 
       it "does not log an entry station" do
-        # To check that journey does not start!
-
-
+        expect(card.journey.entry_station).to eq nil
       end
-
 
     end
   end
@@ -68,10 +70,10 @@ describe Oystercard do
 
     before(:each) do
       card.top_up(10.0)
-      card.touch_in(entry_station)
     end
 
     it "reduces the balance by the minimum fare amount" do
+      card.touch_in(entry_station)
       old_balance = card.balance
       card.touch_out(exit_station)
       fare = minimum_balance
@@ -79,35 +81,10 @@ describe Oystercard do
       expect(card.balance).to eq(new_balance)
     end
 
-    # it "overrides the contents of entry_location to nil" do
-    #   card.touch_out(exit_station)
-    #   expect(card.entry_station).to be_nil
-    # end
+    it "deducts the penalty fare if the user did not touch in" do
+      expect{ card.touch_out(exit_station) }.to change { card.balance }.by(-penalty_fare)
+    end
 
   end
-
-  # describe "#history" do
-  #   it "displays an empty array when card first initialized" do
-  #     card.top_up(90)
-  #     expect(card.history).to eq []
-  #   end
-  #
-  #   it "display an array of historic journeys" do
-  #     card.top_up(90)
-  #     5.times do
-  #       card.touch_in(entry_station)
-  #       card.touch_out(exit_station)
-  #     end
-  #
-  #     card_history = [
-  #       {entry: entry_station, exit: exit_station, fare: fare},
-  #       {entry: entry_station, exit: exit_station, fare: fare},
-  #       {entry: entry_station, exit: exit_station, fare: fare},
-  #       {entry: entry_station, exit: exit_station, fare: fare},
-  #       {entry: entry_station, exit: exit_station, fare: fare}
-  #     ]
-  #     expect(card.history).to eq card_history
-  #   end
-  # end
 
 end
