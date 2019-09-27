@@ -32,24 +32,6 @@ describe Oystercard do
 
   end
 
-  # describe "#in_journey" do
-  #   it "responds to false when the card is instantiated" do
-  #     expect(card.in_journey).to eq false
-  #   end
-  #   it "responds to true when the user has touched in" do
-  #     card.top_up(minimum_balance)
-  #     card.touch_in(entry_station)
-  #     expect(card.in_journey).to eq true
-  #   end
-  #
-  #   it "responds to false when the user has touched in and out" do
-  #     card.touch_in(entry_station)
-  #     card.touch_out(exit_station)
-  #     expect(card.in_journey).to eq false
-  #   end
-  #
-  # end
-
   describe "#touch_in" do
 
     context "with sufficient funds" do
@@ -59,20 +41,25 @@ describe Oystercard do
         card.touch_in(entry_station)
       end
 
-      it "creates a Journey and logs the entry station" do
-        journey = Journey.new
-        expect(journey.entry_station).to eq entry_station
+      it "logs the entry station" do
+        expect(card.journey.entry_station).to eq entry_station
       end
 
     end
 
     context "with insufficient funds" do
+
       it "returns a notification to user" do
         message = "Insufficient funds. Card balance: #{subject.balance}"
         expect(subject.touch_in(entry_station)).to eq message
       end
 
-      # To check that journey does not start!
+      it "does not log an entry station" do
+        # To check that journey does not start!
+
+
+      end
+
 
     end
   end
